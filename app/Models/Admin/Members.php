@@ -11,4 +11,8 @@ class Members extends Model
     protected $fillable = [
         'name', 'age', 'email', 'image', 'phone_no', 'address', 'sex', 'is_premium'
     ];
+    public function members()
+    {
+        return $this->belongsToMany(Member::class, 'assign_exercise', 'exercise_id', 'member_id');
+    }
 }

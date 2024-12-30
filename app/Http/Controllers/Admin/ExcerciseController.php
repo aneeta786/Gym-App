@@ -112,4 +112,10 @@ class ExcerciseController extends Controller
          $excercise->delete();
         return redirect()->route('admin.excercise.list')->with('success', 'Banner deleted successfully.');
     }
+    public function assignmembers($id){
+        $exlist = Excercise::all();
+       
+        return view('admin.excercise.assign-excercise',compact('exlist', 'id'));
+    }
+    
 }

@@ -128,4 +128,5 @@ class MembersController extends Controller
          $members->delete();
         return redirect()->route('admin.member.list')->with('success', 'Banner deleted successfully.');
     }
+    
 }

@@ -23,7 +23,7 @@
         @foreach ($member as $members)
             <tr>
                 <td>{{$members->id}}</td>
-                <td>{{$members->name}}</td>
+                <td><a class="btn btn-primary btn-sm" href="{{ route('admin.excercise.assignmembers', ['id' => $members->id]) }}">{{$members->name}}</a></td>
                 <td>{{$members->age}}</td>
                 <td>{{$members->email}}</td>
                 <td>{{$members->image}}</td>

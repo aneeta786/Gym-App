@@ -12,17 +12,16 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('members', function (Blueprint $table) {
-            $table->id();
-            $table->string('name'); 
-            $table->integer('age'); 
-            $table->string('email')->unique(); 
+            $table->id();  // This is an unsigned big integer by default
+            $table->string('name');
+            $table->integer('age');
+            $table->string('email')->unique();
             $table->string('image')->nullable();
             $table->string('phone_no');
-            $table->text('address'); 
-            $table->enum('sex', ['male', 'female', 'other']); 
-            $table->boolean('is_premium')->default(false); 
+            $table->text('address');
+            $table->enum('sex', ['male', 'female', 'other']);
+            $table->string('is_premium');
             $table->timestamps();
-            
         });
     }
 

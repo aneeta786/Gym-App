@@ -11,9 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('members', function (Blueprint $table) {
-            $table->string('is_premium')->change(); // Modify the column to VARCHAR
-
+        Schema::table('assign_exercise', function (Blueprint $table) {
+            $table->string('exercise_name')->after('exercise_id');  // Add 'exercise_name' after 'exercise_id'
         });
     }
 
@@ -22,9 +21,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('members', function (Blueprint $table) {
-            $table->boolean('is_premium')->change(); // Revert back to BOOLEAN
-
+        Schema::table('assign_exercise', function (Blueprint $table) {
+            $table->dropColumn('exercise_name');  // Drop the 'exercise_name' column if rolling back
         });
     }
 };
