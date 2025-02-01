@@ -1,10 +1,8 @@
 <?php
-
 namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Admin\Excercise;
-
 class ExcerciseController extends Controller
 {
     /**
@@ -18,9 +16,10 @@ class ExcerciseController extends Controller
     /**
      * Show the form for creating a new resource.
      */
+    // You can remove this if it's not used.
     public function create()
     {
-        //
+        // You may not need this since index() handles the view.
     }
 
     /**
@@ -29,23 +28,28 @@ class ExcerciseController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'name' => 'required',
-            'description' => 'required',
+            'name' => 'required|string|max:255',
+            'description' => 'required|string',
             'image' => 'nullable|image|mimes:jpg,png,gif,jpeg',
         ]);
+
+        // Handle the image upload
         $imagePath = null;
-        if($request->hasfile('image')){
+        if ($request->hasFile('image')) {
             $file = $request->file('image');
-            if($file->isValid()){
-              $imagePath = $file->store('imagess', 'public');
-            }else{}
+            if ($file->isValid()) {
+                $imagePath = $file->store('images', 'public');
+            }
         }
+
+        // Create new exercise
         Excercise::create([
             'name' => $request->name,
             'description' => $request->description,
             'image' => $imagePath,
-            ]);
-            return redirect()->route('admin.excercise.list')->with('success', 'User created successfully!');
+        ]);
+
+        return redirect()->route('dashboard.excercise.list')->with('success', 'Exercise created successfully!');
     }
 
     /**
@@ -53,8 +57,8 @@ class ExcerciseController extends Controller
      */
     public function show()
     {
-        $excercise= Excercise::all();
-       return view('Admin.excercise.list' , compact('excercise'));
+        $excercise = Excercise::all();
+        return view('Admin.excercise.list', compact('excercise'));
     }
 
     /**
@@ -62,7 +66,7 @@ class ExcerciseController extends Controller
      */
     public function edit(string $id)
     {
-        $excercise = Excercise::findOrFail($id); // Correct the variable name to $blog
+        $excercise = Excercise::findOrFail($id);
         return view('Admin.excercise.edit', compact('excercise'));
     }
 
@@ -70,35 +74,37 @@ class ExcerciseController extends Controller
      * Update the specified resource in storage.
      */
     public function update(Request $request, $id)
-{
-    $request->validate([
-        'name' => 'nullable|string',
-        'description' => 'nullable|string',
-        'image' => 'nullable|image|mimes:jpg,png,gif,jpeg',
-    ]);
+    {
+        $request->validate([
+            'name' => 'nullable|string|max:255',
+            'description' => 'nullable|string',
+            'image' => 'nullable|image|mimes:jpg,png,gif,jpeg',
+        ]);
 
-    $excercise = Excercise::findOrFail($id);
-    if ($request->hasFile('image')) {
-        if ($excercise->image && \Storage::disk('public')->exists($excercise->image)) {
-            \Storage::disk('public')->delete($excercise->image);
+        $excercise = Excercise::findOrFail($id);
+
+        // Handle image update
+        if ($request->hasFile('image')) {
+            if ($excercise->image && \Storage::disk('public')->exists($excercise->image)) {
+                \Storage::disk('public')->delete($excercise->image);
+            }
+            $imagePath = $request->file('image')->store('images', 'public');
+            $excercise->image = $imagePath;
         }
-        $imagePath = $request->file('image')->store('images', 'public');
-        $excercise->image = $imagePath;
+
+        // Update the other fields
+        if ($request->has('name')) {
+            $excercise->name = $request->name;
+        }
+
+        if ($request->has('description')) {
+            $excercise->description = $request->description;
+        }
+
+        $excercise->save();
+
+        return redirect()->route('dashboard.excercise.list')->with('success', 'Exercise updated successfully!');
     }
-    if ($request->has('name')) {
-        $excercise->name = $request->name;
-    }
-
-    if ($request->has('description')) {
-        $excercise->description = $request->description;
-    }
-
-    $excercise->save();
-
-    return redirect()->route('admin.excercise.list')->with('success', 'Exercise updated successfully!');
-}
-
-    
 
     /**
      * Remove the specified resource from storage.
@@ -106,16 +112,24 @@ class ExcerciseController extends Controller
     public function destroy(string $id)
     {
         $excercise = Excercise::findOrFail($id);
-         if (file_exists(public_path('storage/' . $excercise->image)) && $excercise->image) {
-             unlink(public_path('storage/' . $excercise->image));
-         }
-         $excercise->delete();
-        return redirect()->route('admin.excercise.list')->with('success', 'Banner deleted successfully.');
+
+        // Delete the image if it exists
+        if ($excercise->image && \Storage::disk('public')->exists($excercise->image)) {
+            \Storage::disk('public')->delete($excercise->image);
+        }
+
+        // Delete the exercise record
+        $excercise->delete();
+
+        return redirect()->route('dashboard.excercise.list')->with('success', 'Exercise deleted successfully.');
     }
-    public function assignmembers($id){
+
+    /**
+     * Show the form for assigning exercises to members.
+     */
+    public function assignMembers($id)
+    {
         $exlist = Excercise::all();
-       
-        return view('admin.excercise.assign-excercise',compact('exlist', 'id'));
+        return view('admin.excercise.assign-excercise', compact('exlist', 'id'));
     }
-    
 }

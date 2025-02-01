@@ -5,7 +5,7 @@
             <!-- Main Content -->
         <main class="px-4">
             <h1 class="mt-4">Excercise Add</h1>
-            <form method="post" action="{{ route('admin.excercise.store') }}" enctype="multipart/form-data">
+            <form method="post" action="{{ route('dashboard.excercise.store') }}" enctype="multipart/form-data">
                 @csrf
                 <div class="mb-3">
                 <label for="name" class="form-label">Name</label>

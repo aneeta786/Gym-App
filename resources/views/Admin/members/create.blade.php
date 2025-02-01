@@ -5,7 +5,7 @@
             <!-- Main Content -->
         <main class="px-4">
             <h1 class="mt-4">Member Add</h1>
-            <form method="post" action="{{ route('admin.member.store') }}" enctype="multipart/form-data">
+            <form method="post" action="{{ route('dashboard.member.store') }}" enctype="multipart/form-data">
                 @csrf
                 <!-- Name Field -->
                 <div class="mb-3">

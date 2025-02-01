@@ -22,10 +22,10 @@
                 <td>{{$getexcercise->description}}</td>
                 <td>{{$getexcercise->image}}</td>
                 <td>
-                    <a class="btn btn-primary btn-sm" href="{{ route('admin.excercise.edit', ['id' => $getexcercise->id]) }}">Edit</a>
+                    <a class="btn btn-primary btn-sm" href="{{ route('dashboard.excercise.edit', ['id' => $getexcercise->id]) }}">Edit</a>
                 </td>
                 <td>
-                    <form action="{{ route('admin.excercise.delete', ['id' => $getexcercise->id]) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this banner?');">
+                    <form action="{{ route('dashboard.excercise.delete', ['id' => $getexcercise->id]) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this banner?');">
                     @csrf
                     @method('DELETE')
                     <button type="submit" class="class="btn btn-primary btn-sm"">Delete</button>
